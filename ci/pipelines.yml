@@ -69,7 +69,7 @@ resources:
       siteName: "{{ .Values.DemoAppDistributionResources.distributionRule.siteName }}"
       cityName: "{{ .Values.DemoAppDistributionResources.distributionRule.cityName }}"
       countryCodes:
-      {{- range .Values.distributionRule.countryCodes }}
+      {{- range .Values.DemoAppDistributionResources.distributionRule.countryCodes }}
         - "{{ . }}"
       {{- end }}  
         

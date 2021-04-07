@@ -67,7 +67,7 @@ DemoAppDistributionResources:
     name: turbine-demo
     isSigned: true
   aql:
-    resourceName: aql_demo_app
+    name: aql_demo_app
     edgeRepo: docker-local
   distributionRule:
     name: dr_rb_demo_app
@@ -75,7 +75,7 @@ DemoAppDistributionResources:
     siteName: "*"
     cityName: "*"
     countryCodes:
-      - US
+      - "US"
 
 DemoAppDistributionSteps:
   initPipeline:
