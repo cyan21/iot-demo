@@ -1,0 +1,193 @@
+template: true
+valuesFilePath: values.yml  
+
+resources:
+
+# DOCKER PIPELINE
+  - name: {{ .Values.DemoAppContainerResources.gitRepo.name }}
+    type: GitRepo
+    configuration:
+      gitProvider: {{ .Values.DemoAppContainerResources.gitRepo.gitProvider }}
+      path: {{ .Values.DemoAppContainerResources.gitRepo.path }}
+      branches:
+        include: {{ .Values.DemoAppContainerResources.gitRepo.branches.include }}
+      files:
+        include: {{ .Values.DemoAppContainerResources.gitRepo.files.include }}
+
+  - name: {{ .Values.DemoAppContainerResources.buildInfo.resourceName }}
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: {{ .Values.DemoApp.artifactoryIntegration }}
+      buildName: {{ .Values.DemoAppContainerResources.buildInfo.name }}
+      buildNumber: ${run_number}
+
+  - name: {{ .Values.DemoAppContainerResources.buildInfoPromotion.resourceName }}
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: {{ .Values.DemoApp.artifactoryIntegration }}
+      buildName: {{ .Values.DemoAppContainerResources.buildInfo.name }}
+      buildNumber: ${run_number}
+
+  - name: {{ .Values.DemoAppContainerResources.propertyBag.name }}
+    type: PropertyBag
+    configuration:
+      newTag: XXX
+
+###### DISTRIBUTION 
+
+  # - name: rb_helm_docker
+  #   type: ReleaseBundle
+  #   configuration:
+  #     sourceDistribution: distribution_eu
+  #     name: {{ .Values.DemoApp.releaseBundleName }}
+  #     version: "1"          # will be overriden by the CreateReleaseBundle step 
+  #     isSigned: true
+
+  # - name: aql_distrib
+  #   type: Aql
+  #   configuration:
+  #     sourceArtifactory: artifactory_eu
+  #     query: > 
+  #       items.find({
+  #       "$and": [
+  #       {"@docker.manifest": "${runVarImageTag}"},
+  #       {"@docker.repoName": "${runVarImageName}"},
+  #       {"repo": "{{ .Values.DemoApp.container.repoPromotion2 }}"}
+  #       ]})
+  #     addedProperties:
+  #       distribution: "automatic"
+  #     mappings:
+  #       - name: docker
+  #         input: "{{ .Values.DemoApp.container.repoPromotion2 }}/(.*)"
+  #         output: "docker-local/$1"
+
+  # - name: dr_helm_docker 
+  #   type: DistributionRule
+  #   configuration:
+  #     sourceDistribution: distribution_eu
+  #     serviceName: "*"         
+  #     siteName: "*"
+  #     cityName: "*"
+  #     countryCodes:
+  #       - "US"
+
+pipelines:
+
+  - name: {{ .Values.DemoApp.pipelineContainerName }}
+    steps:
+      - name: {{ .Values.DemoAppContainerSteps.dockerBuild.name }}
+        type: DockerBuild
+        configuration:
+          affinityGroup: together
+          dockerFileName: {{ .Values.DemoAppContainerSteps.dockerBuild.dockerFileName }}
+          dockerFileLocation: {{ .Values.DemoAppContainerSteps.dockerBuild.dockerFileLocation }}
+          dockerImageName: "{{ .Values.DemoApp.container.registry }}/{{ .Values.DemoApp.container.image }}"
+          dockerImageTag: {{ .Values.DemoApp.container.tag }}
+          inputResources:
+            - name: {{ .Values.DemoAppContainerResources.gitRepo.name }}
+          integrations:
+            - name: {{ .Values.DemoApp.artifactoryIntegration }}
+        # execution:
+        #   onStart:
+        #     - cd ${res_{{ .Values.DemoAppContainerResources.gitRepo.name }}_resourcePath}
+        #     # get last commit on the dockerfile
+        #     - add_run_variables runVarGitCommit=`git log -n 1 --pretty=format:%H -- back/CI/Docker/jfrog-Dockerfile`
+        #     - add_run_variables runBranchName=${res_{{ .Values.DemoAppContainerResources.gitRepo.name }}_branchName}
+        #     - echo $runBranchName
+        #     - jfrog --version
+
+      - name: {{ .Values.DemoAppContainerSteps.dockerPush.name }}
+        type: DockerPush
+        configuration:
+          affinityGroup: together
+          targetRepository: {{ .Values.DemoApp.container.repoSource }}
+          autoPublishBuildInfo: {{ .Values.DemoAppContainerSteps.dockerPush.autoPublishBuildInfo }}
+          inputSteps:
+            - name: {{ .Values.DemoAppContainerSteps.dockerBuild.name }}
+          integrations:
+            - name: {{ .Values.DemoApp.artifactoryIntegration }}
+          outputResources:
+            - name: {{ .Values.DemoAppContainerResources.buildInfo.resourceName }}
+        execution:
+          onStart:
+            - export JFROG_CLI_BUILD_URL="${int_{{ .Values.DemoApp.artifactoryIntegration }}_url/%artifactory/ui}/pipelines/myPipelines/{{ .Values.DemoAppContainerResources.buildInfo.name }}/${run_number}/setup_env?branch=${runBranchName}"
+          # onSuccess:
+          #   - echo "{{ .Values.DemoAppContainerSteps.dockerPush.artifactoryTargetRepoName }}/{{ .Values.DemoAppContainerSteps.dockerBuild.imageName }}/${runVarAppVersion}/manifest.json"
+          #   - jfrog rt sp --build=${res_{{ .Values.DemoAppContainerResources.buildInfo.resourceName }}_buildName}/${run_number} {{ .Values.DemoAppContainerSteps.dockerPush.artifactoryTargetRepoName }}/{{ .Values.DemoAppContainerSteps.dockerBuild.imageName }}/${runVarAppVersion}/manifest.json "app.version=${runVarAppVersion};app.commit.sha=${runVarAppCommitSHA};dockerfile.commit.sha=${runVarGitCommit}"
+
+      - name: {{ .Values.DemoAppContainerSteps.xray.name }}
+        type: XrayScan
+        configuration:
+          failOnScan: false
+          inputResources:
+            - name: {{ .Values.DemoAppContainerResources.buildInfo.resourceName }}
+              trigger: true
+
+      - name: {{ .Values.DemoAppContainerSteps.promotion.name }}
+        type: PromoteBuild
+        configuration:
+          targetRepository: {{ .Values.DemoApp.container.repoPromotion1 }}
+          includeDependencies: {{ .Values.DemoAppContainerSteps.promotion.includeDependencies }}
+          status: {{ .Values.DemoAppContainerSteps.promotion.status }}
+          comment: {{ .Values.DemoAppContainerSteps.promotion.comment }}
+          copy: {{ .Values.DemoAppContainerSteps.promotion.copy }}
+          integrations:
+            - name: {{ .Values.DemoApp.artifactoryIntegration }}
+          inputResources:
+            - name: {{ .Values.DemoAppContainerResources.buildInfo.resourceName }}
+              trigger: true
+          inputSteps:
+            - name: {{ .Values.DemoAppContainerSteps.xray.name }}
+          outputResources:
+            - name: {{ .Values.DemoAppContainerResources.buildInfoPromotion.resourceName }}
+            - name: {{ .Values.DemoAppContainerResources.propertyBag.name }}
+        execution:
+          onSuccess:
+            - write_output {{ .Values.DemoAppContainerResources.propertyBag.name }} newTag={{ .Values.DemoApp.container.tag }}
+
+
+  
+  # - name: {{ .Values.DemoApp.pipelineDistributionName }}
+  #   steps:
+  #     - name: init_distribution
+  #       type: Bash
+  #       configuration:
+  #         inputResources:
+  #           - name: {{ .Values.DemoAppContainerDeployResources.propertyBag.name }}
+  #         outputResources:
+  #           - name: aql_distrib
+  #       execution:
+  #         onExecute:
+  #           - echo "init distribution"
+  #           - add_run_variables runVarImageTag=${res_{{ .Values.DemoAppContainerDeployResources.propertyBag.name }}_imageTag}
+  #           - add_run_variables runVarImageName=${res_{{ .Values.DemoAppContainerDeployResources.propertyBag.name }}_imageName}
+
+  #     - name: init_rb
+  #       type: CreateReleaseBundle 
+  #       configuration:
+  #         releaseBundleName: {{ .Values.DemoApp.releaseBundleName }} 
+  #         releaseBundleVersion: ${runVarImageTag} 
+  #         dryRun: false
+  #         sign: true 
+  #         description: automatic creation 
+  #         releaseNotes:
+  #           syntax: markdown
+  #           content: |
+  #             # Description 
+  #             super release 
+  #             * Feature 1 
+  #             * Bigfix 1
+  #         inputResources:
+  #           - name: aql_distrib
+  #         outputResources:
+  #           - name: rb_helm_docker 
+
+  #     - name: distribute_helm_docker
+  #       type: DistributeReleaseBundle
+  #       configuration:
+  #         dryRun: true 
+  #         inputResources:
+  #           - name: dr_helm_docker 
+  #             trigger: true   
+  #           - name: rb_helm_docker 
+  #             trigger: true  

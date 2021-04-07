@@ -1,0 +1,58 @@
+DemoApp:
+  pipelineName: demo_app
+  pipelineContainerName: demo_app_docker
+  pipelineDistributionName: demo_app_distribute
+  releaseBundleName: iot-demo
+  projectName: jupiter
+  artifactoryIntegration: artifactory_eu
+  k8sIntegration: yann_k8s
+  k8sNamespace: saturn
+  container:
+    # for Docker build
+    registry: iot-demo.gcp.devopsacc.team:80/jupiter-docker
+    image: turbine-app
+    tag: 0.0.1
+    # for Docker push (which calls the JFrog CLI set props => only accept local repo)
+    repoSource: jupiter-docker-dev-local
+    repoPromotion1: jupiter-docker-rc-local
+    repoPromotion2: jupiter-docker-release-local
+
+
+##########################################
+## CONTAINER PIPELINE
+##########################################
+
+DemoAppContainerResources:
+  gitRepo:
+    name: src_dockerfile_demo_app
+    gitProvider: yann_github
+    path: cyan21/iot-demo
+    branches:
+      include: main
+    files:
+      exclude: 'ci/*'
+  buildInfo:
+    resourceName: bi_demo_app_docker
+    name: demo_app_docker
+  buildInfoPromotion:
+    resourceName: bi_demo_app_docker_promoted_staging
+  propertyBag: 
+    name: pb_demo_app_docker
+
+DemoAppContainerSteps:
+  dockerBuild:
+    name: build_demo_app_docker
+    dockerFileName: Dockerfile
+    dockerFileLocation: .
+  dockerPush:
+    name: publish_demo_app_docker
+    autoPublishBuildInfo: true
+  xray:
+    name: scan_demo_app_docker
+  promotion:
+    name: promote_bi_demo_app_docker
+    includeDependencies: false
+    status: SCAN_OK
+    comment: Xray scan OK 
+    copy: false
+
