@@ -65,12 +65,12 @@ resources:
     type: DistributionRule
     configuration:
       sourceDistribution: {{ .Values.DemoApp.distributionIntegration }}
-      serviceName: {{ .Values.DemoAppDistributionResources.distributionRule.serviceName }}         
-      siteName: {{ .Values.DemoAppDistributionResources.distributionRule.siteName }}
-      cityName: {{ .Values.DemoAppDistributionResources.distributionRule.cityName }}
+      serviceName: "{{ .Values.DemoAppDistributionResources.distributionRule.serviceName }}"       
+      siteName: "{{ .Values.DemoAppDistributionResources.distributionRule.siteName }}"
+      cityName: "{{ .Values.DemoAppDistributionResources.distributionRule.cityName }}"
       countryCodes:
       {{- range .Values.distributionRule.countryCodes }}
-        - {{ . }}
+        - "{{ . }}"
       {{- end }}  
         
 pipelines:
