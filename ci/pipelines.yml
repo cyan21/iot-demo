@@ -51,7 +51,7 @@ resources:
         items.find({
         "$and": [
         {"@docker.manifest": "${runVarImageTag}"},
-        {"@docker.repoName": "${runVarImageName}"},
+        {"@docker.repoName": "{{ .Values.DemoApp.container.image }}"},
         {"repo": "{{ .Values.DemoApp.container.repoPromotion2 }}"}
         ]})
       addedProperties:
@@ -127,6 +127,7 @@ pipelines:
           copy: {{ .Values.DemoAppContainerSteps.promotion.copy }}
           integrations:
             - name: {{ .Values.DemoApp.artifactoryIntegration }}
+            - name: iot_slack
           inputResources:
             - name: {{ .Values.DemoAppContainerResources.buildInfo.resourceName }}
               trigger: true
@@ -138,6 +139,7 @@ pipelines:
         execution:
           onSuccess:
             - write_output {{ .Values.DemoAppContainerResources.propertyBag.name }} newTag={{ .Values.DemoApp.container.tag }}
+            - send_notification iot_slack --text "starting test_step_1" --recipient "#iot-demo-notifications"
 
   - name: {{ .Values.DemoApp.pipelineDistributionName }}
     steps:
