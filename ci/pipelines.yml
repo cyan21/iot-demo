@@ -12,7 +12,7 @@ resources:
       branches:
         include: {{ .Values.DemoAppContainerResources.gitRepo.branches.include }}
       files:
-        include: {{ .Values.DemoAppContainerResources.gitRepo.files.include }}
+        include: {{ .Values.DemoAppContainerResources.gitRepo.files.exclude }}
 
   - name: {{ .Values.DemoAppContainerResources.buildInfo.resourceName }}
     type: BuildInfo
