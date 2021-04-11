@@ -10,7 +10,7 @@ DemoApp:
   k8sNamespace: saturn
   container:
     # for Docker build
-    registry: iot-demo.gcp.devopsacc.team:80/jupiter-docker
+    registry: iot-demo.prod.aws.devopsacc.team:80/jupiter-docker
     image: turbine-app
     tag: 0.0.1
     # for Docker push (which calls the JFrog CLI set props => only accept local repo)
@@ -29,7 +29,7 @@ DemoAppContainerResources:
     gitProvider: yann_github
     path: cyan21/iot-demo
     branches:
-      include: main
+      include: demo2
     files:
       exclude: "ci/"
   buildInfo:
