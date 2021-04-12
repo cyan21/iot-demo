@@ -54,7 +54,7 @@ DemoAppContainerSteps:
     name: promote_bi_demo_app_docker
     includeDependencies: false
     status: SCAN_OK
-    comment: Xray scan OK 
+    comment: Xray scan OK !!!! 
     copy: false
 
 ##########################################
