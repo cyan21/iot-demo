@@ -30,8 +30,8 @@ DemoAppContainerResources:
     path: cyan21/iot-demo
     branches:
       include: demo2
-    # files:
-    #   exclude: "ci/"
+    files:
+      exclude: ci/**
   buildInfo:
     resourceName: bi_demo_app_docker
     name: demo_app_docker
