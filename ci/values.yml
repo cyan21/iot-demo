@@ -31,7 +31,7 @@ DemoAppContainerResources:
     branches:
       include: demo2
     files:
-      exclude: ci/.*\\.yml 
+      exclude: ^ci\/.+\.yml 
   buildInfo:
     resourceName: bi_demo_app_docker
     name: demo_app_docker
