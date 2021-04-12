@@ -5,7 +5,7 @@ DemoApp:
   releaseBundleName: iot-demo
   projectName: jupiter
   artifactoryIntegration: artifactory_eu
-  distributionIntegration: distribution_eu
+#  distributionIntegration: distribution_eu
   k8sIntegration: yann_k8s
   k8sNamespace: saturn
   container:
