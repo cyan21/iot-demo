@@ -66,7 +66,9 @@ DemoAppDistributionResources:
     resourceName: rb_demo_app
     name: turbine-demo
     isSigned: true
-    dryRun: true
+    dryRun: 
+      create: false
+      distribute: true
   aql:
     name: aql_demo_app
     edgeRepo: docker-local
