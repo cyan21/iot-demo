@@ -3,7 +3,10 @@ valuesFilePath: values.yml
 
 resources:
 
-# DOCKER PIPELINE
+#########################################################
+#### RESOURCE DOCKER PIPELINE
+##########################################################
+
   - name: {{ .Values.DemoAppContainerResources.gitRepo.name }}
     type: GitRepo
     configuration:
@@ -13,6 +16,8 @@ resources:
         include: {{ .Values.DemoAppContainerResources.gitRepo.branches.include }}
       files:
         exclude: {{ .Values.DemoAppContainerResources.gitRepo.files.exclude }}
+      buildOn:
+         commit: {{ .Values.DemoAppContainerResources.gitRepo.buildOnCommit }}
 
   - name: {{ .Values.DemoAppContainerResources.buildInfo.resourceName }}
     type: BuildInfo
@@ -33,47 +38,54 @@ resources:
     configuration:
       newTag: XXX
 
-###### DISTRIBUTION 
 
-  # - name: {{ .Values.DemoAppDistributionResources.releaseBundle.resourceName }}
-  #   type: ReleaseBundle
-  #   configuration:
-  #     sourceDistribution: {{ .Values.DemoApp.distributionIntegration }}
-  #     name: {{ .Values.DemoApp.releaseBundleName }}
-  #     version: "1"          # will be overriden by the CreateReleaseBundle step 
-  #     isSigned: {{ .Values.DemoAppDistributionResources.releaseBundle.isSigned }}
+#########################################################
+#### RESOURCE DISTRIB PIPELINE
+##########################################################
 
-  # - name: {{ .Values.DemoAppDistributionResources.aql.name }}
-  #   type: Aql
-  #   configuration:
-  #     sourceArtifactory: {{ .Values.DemoApp.artifactoryIntegration }}
-  #     query: > 
-  #       items.find({
-  #       "$and": [
-  #       {"@docker.manifest": "${runVarImageTag}"},
-  #       {"@docker.repoName": "{{ .Values.DemoApp.container.image }}"},
-  #       {"repo": "{{ .Values.DemoApp.container.repoPromotion2 }}"}
-  #       ]})
-  #     addedProperties:
-  #       distribution: "automatic"
-  #     mappings:
-  #       - name: docker
-  #         input: "{{ .Values.DemoApp.container.repoPromotion2 }}/(.*)"
-  #         output: "{{ .Values.DemoAppDistributionResources.aqle.edgeRepo }}/$1"
+  - name: {{ .Values.DemoAppDistributionResources.releaseBundle.resourceName }}
+    type: ReleaseBundle
+    configuration:
+      sourceDistribution: {{ .Values.DemoApp.distributionIntegration }}
+      name: {{ .Values.DemoApp.releaseBundleName }}
+      version: "1"          # will be overriden by the CreateReleaseBundle step 
+      isSigned: {{ .Values.DemoAppDistributionResources.releaseBundle.isSigned }}
 
-  # - name:  {{ .Values.DemoAppDistributionResources.distributionRule.name }}
-  #   type: DistributionRule
-  #   configuration:
-  #     sourceDistribution: {{ .Values.DemoApp.distributionIntegration }}
-  #     serviceName: "{{ .Values.DemoAppDistributionResources.distributionRule.serviceName }}"       
-  #     siteName: "{{ .Values.DemoAppDistributionResources.distributionRule.siteName }}"
-  #     cityName: "{{ .Values.DemoAppDistributionResources.distributionRule.cityName }}"
-  #     countryCodes:
-  #     {{- range .Values.DemoAppDistributionResources.distributionRule.countryCodes }}
-  #       - "{{ . }}"
-  #     {{- end }}  
+  - name: {{ .Values.DemoAppDistributionResources.aql.name }}
+    type: Aql
+    configuration:
+      sourceArtifactory: {{ .Values.DemoApp.artifactoryIntegration }}
+      query: > 
+        items.find({
+        "$and": [
+        {"@docker.manifest": "${runVarImageTag}"},
+        {"repo": "{{ .Values.DemoApp.container.repoPromotion1 }}"}
+        ]})
+      addedProperties:
+        distribution: "automatic"
+      mappings:
+        - name: docker
+          input: "{{ .Values.DemoApp.container.repoPromotion1 }}/(.*)"
+          output: "{{ .Values.DemoAppDistributionResources.aqle.edgeRepo }}/$1"
+
+  - name:  {{ .Values.DemoAppDistributionResources.distributionRule.name }}
+    type: DistributionRule
+    configuration:
+      sourceDistribution: {{ .Values.DemoApp.distributionIntegration }}
+      serviceName: "{{ .Values.DemoAppDistributionResources.distributionRule.serviceName }}"       
+      siteName: "{{ .Values.DemoAppDistributionResources.distributionRule.siteName }}"
+      cityName: "{{ .Values.DemoAppDistributionResources.distributionRule.cityName }}"
+      countryCodes:
+      {{- range .Values.DemoAppDistributionResources.distributionRule.countryCodes }}
+        - "{{ . }}"
+      {{- end }}  
         
 pipelines:
+
+
+#########################################################
+#### DOCKER PIPELINE
+##########################################################
 
   - name: {{ .Values.DemoApp.pipelineContainerName }}
     steps:
@@ -141,46 +153,51 @@ pipelines:
             - write_output {{ .Values.DemoAppContainerResources.propertyBag.name }} newTag={{ .Values.DemoApp.container.tag }}
 #            - send_notification iot_slack --text "starting test_step_1" --recipient "#iot-demo-notifications"
 
-  # - name: {{ .Values.DemoApp.pipelineDistributionName }}
-  #   steps:
-  #     - name: {{ .Values.DemoAppDistributionSteps.initPipeline.name }}
-  #       type: Bash
-  #       configuration:
-  #         inputResources:
-  #           - name: {{ .Values.DemoAppContainerResources.propertyBag.name }}
-  #         outputResources:
-  #           - name: {{ .Values.DemoAppDistributionResources.aql.name }}
-  #       execution:
-  #         onExecute:
-  #           - echo "init distribution"
-  #           - add_run_variables runVarImageTag=${res_{{ .Values.DemoAppContainerDeployResources.propertyBag.name }}_newTag}
 
-  #     - name: {{ .Values.DemoAppDistributionSteps.createRB.name }}
-  #       type: CreateReleaseBundle 
-  #       configuration:
-  #         releaseBundleName: {{ .Values.DemoApp.releaseBundleName }} 
-  #         releaseBundleVersion: ${runVarImageTag} 
-  #         dryRun: false
-  #         sign: true 
-  #         description: automatic creation 
-  #         releaseNotes:
-  #           syntax: markdown
-  #           content: |
-  #             # Description 
-  #             super release 
-  #             * Feature 1 
-  #             * Bigfix 1
-  #         inputResources:
-  #           - name: {{ .Values.DemoAppDistributionResources.aql.name }}
-  #         outputResources:
-  #           - name: {{ .Values.DemoAppDistributionResources.releaseBundle.resourceName }} 
+#########################################################
+#### DISTRIB PIPELINE
+##########################################################
 
-  #     - name: {{ .Values.DemoAppDistributionSteps.distributeRB.name }}
-  #       type: DistributeReleaseBundle
-  #       configuration:
-  #         dryRun: true 
-  #         inputResources:
-  #           - name: {{ .Values.DemoAppDistributionResources.distributionRule.name }}
-  #             trigger: true   
-  #           - name: {{ .Values.DemoAppDistributionResources.releaseBundle.resourceName }}  
-  #             trigger: true  
+
+  - name: {{ .Values.DemoApp.pipelineDistributionName }}
+    steps:
+      - name: {{ .Values.DemoAppDistributionSteps.initPipeline.name }}
+        type: Bash
+        configuration:
+          inputResources:
+            - name: {{ .Values.DemoAppContainerResources.propertyBag.name }}
+          outputResources:
+            - name: {{ .Values.DemoAppDistributionResources.aql.name }}
+        execution:
+          onExecute:
+            - echo "init distribution"
+            - add_run_variables runVarImageTag=${res_{{ .Values.DemoAppContainerDeployResources.propertyBag.name }}_newTag}
+
+      - name: {{ .Values.DemoAppDistributionSteps.createRB.name }}
+        type: CreateReleaseBundle 
+        configuration:
+          releaseBundleName: {{ .Values.DemoApp.releaseBundleName }} 
+          releaseBundleVersion: ${runVarImageTag} 
+          dryRun: {{ .Values.DemoAppDistributionResources.releaseBundle.dryRun }}
+          description: automatic creation 
+          releaseNotes:
+            syntax: markdown
+            content: |
+              # Description 
+              super release 
+              * Feature 1 
+              * Bigfix 1
+          inputResources:
+            - name: {{ .Values.DemoAppDistributionResources.aql.name }}
+          outputResources:
+            - name: {{ .Values.DemoAppDistributionResources.releaseBundle.resourceName }} 
+
+      - name: {{ .Values.DemoAppDistributionSteps.distributeRB.name }}
+        type: DistributeReleaseBundle
+        configuration:
+          dryRun: true 
+          inputResources:
+            - name: {{ .Values.DemoAppDistributionResources.distributionRule.name }}
+              trigger: true   
+            - name: {{ .Values.DemoAppDistributionResources.releaseBundle.resourceName }}  
+              trigger: true  
