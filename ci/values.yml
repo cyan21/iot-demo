@@ -10,7 +10,7 @@ DemoApp:
     # for Docker build
     registry: iot-demo.gcp.devopsacc.team:80/jupiter-docker
     image: turbine-demo
-    tag: 0.0.3
+    tag: 0.0.4
     # for Docker push (which calls the JFrog CLI set props => only accept local repo)
     repoSource: jupiter-docker-dev-local
     repoPromotion1: jupiter-docker-release-local
