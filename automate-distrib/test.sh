@@ -4,14 +4,14 @@
 # artifactory URL : http://artifactory-eu-yannc4-0.soleng-emea-staging.jfrog.team/artifactory
 # distribution URL : http://artifactory-eu-yannc4-0.soleng-emea-staging.jfrog.team/distribution
 #jfrog rt c yannc4
-#jfrog c use iot-demo-test 
-jfrog c use iot-demo-shay
+jfrog c use iot-demo-test 
+#jfrog c use iot-demo-shay
 
 
 releaseBundleName=Turbine
-releaseBundleVers=1.2.0
+releaseBundleVers=1.3.1
 repoName=docker-local
-repoName=docker
+#repoName=docker
 imageName=turbine
 
 sed s/REPO_NAME/${repoName}/ releaseBundleCreate.json.tpl | sed s/IMAGE_NAME/${imageName}/ | sed s/IMAGE_TAG/${releaseBundleVers}/ > releaseBundleCreate.json

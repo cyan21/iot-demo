@@ -16,6 +16,6 @@
 </style>
 </head>
 <body>
-<img src="FV_dashboard-red.gif" alt="gif goes here" class="center"/> 
+<img src="FV_dashboard-STATUS.gif" alt="gif goes here" class="center"/> 
 </body>
 </html>

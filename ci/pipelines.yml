@@ -178,6 +178,7 @@ pipelines:
         configuration:
           releaseBundleName: {{ .Values.DemoApp.releaseBundleName }} 
           releaseBundleVersion: ${runVarImageTag} 
+          sign: true
           dryRun: {{ .Values.DemoAppDistributionResources.releaseBundle.dryRun.create }}
           description: automatic creation 
           releaseNotes:

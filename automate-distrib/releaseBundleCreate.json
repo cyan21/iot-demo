@@ -1,0 +1,7 @@
+{
+    "files": [
+        {
+            "pattern": "docker-local/turbine/1.3.1/manifest.json"
+        }
+    ]
+}
