@@ -171,7 +171,7 @@ pipelines:
         execution:
           onExecute:
             - echo "init distribution"
-            - add_run_variables runVarImageTag=${res_{{ .Values.DemoAppContainerDeployResources.propertyBag.name }}_newTag}
+            - add_run_variables runVarImageTag=${res_{{ .Values.DemoAppContainerResources.propertyBag.name }}_newTag}
 
       - name: {{ .Values.DemoAppDistributionSteps.createRB.name }}
         type: CreateReleaseBundle 
