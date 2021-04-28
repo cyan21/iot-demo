@@ -28,9 +28,9 @@ DemoAppContainerResources:
     path: cyan21/iot-demo
     branches:
       include: main
-    files:
+    # files:
 #      exclude: ^ci\/.+\.yml 
-      exclude: ^ci\/pipelines\.yml
+      # exclude: ^ci\/pipelines\.yml
     buildOnCommit: true
   buildInfo:
     resourceName: bi_demo_app_docker
