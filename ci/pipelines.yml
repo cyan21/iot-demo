@@ -14,10 +14,10 @@ resources:
       path: {{ .Values.DemoAppContainerResources.gitRepo.path }}
       branches:
         include: {{ .Values.DemoAppContainerResources.gitRepo.branches.include }}
-      files:
-        exclude: {{ .Values.DemoAppContainerResources.gitRepo.files.exclude }}
-      buildOn:
-         commit: {{ .Values.DemoAppContainerResources.gitRepo.buildOnCommit }}
+      # files:
+      #   exclude: {{ .Values.DemoAppContainerResources.gitRepo.files.exclude }}
+      # buildOn:
+      #    commit: {{ .Values.DemoAppContainerResources.gitRepo.buildOnCommit }}
 
   - name: {{ .Values.DemoAppContainerResources.buildInfo.resourceName }}
     type: BuildInfo

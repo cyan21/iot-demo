@@ -30,7 +30,7 @@ DemoAppContainerResources:
       include: main
     files:
 #      exclude: ^ci\/.+\.yml 
-      exclude: ^ci\/pipelines\.yml 
+      exclude: ^ci\/pipelines\.yml
     buildOnCommit: true
   buildInfo:
     resourceName: bi_demo_app_docker
