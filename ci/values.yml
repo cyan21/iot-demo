@@ -6,6 +6,7 @@ DemoApp:
   projectName: jupiter
   artifactoryIntegration: artifactory_eu
   distributionIntegration: distribution_eu
+  status: green
   container:
     # for Docker build
     registry: iot-demo.gcp.devopsacc.team:80/jupiter-docker

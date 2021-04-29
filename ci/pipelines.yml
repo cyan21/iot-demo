@@ -101,6 +101,10 @@ pipelines:
             - name: {{ .Values.DemoAppContainerResources.gitRepo.name }}
           integrations:
             - name: {{ .Values.DemoApp.artifactoryIntegration }}
+        execution:
+          onStart:
+            - cd ${res_{{ .Values.DemoAppContainerResources.gitRepo.name }}_resourcePath}
+            - make prep STATUS={{ .Values.DemoApp.status }} VERSION={{ .Values.DemoApp.container.tag }}
 
       - name: {{ .Values.DemoAppContainerSteps.dockerPush.name }}
         type: DockerPush
