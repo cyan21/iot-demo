@@ -60,7 +60,7 @@ resources:
         "$and": [
         {"path": "{{ .Values.DemoApp.container.image }}/${runVarImageTag}"},
         {"repo": "{{ .Values.DemoApp.container.repoPromotion1 }}"},
-        {"name": manifest.json}
+        {"name": "manifest.json"}
         ]})
       addedProperties:
         distribution: "automatic"
