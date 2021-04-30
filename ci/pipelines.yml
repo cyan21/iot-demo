@@ -58,8 +58,9 @@ resources:
       query: > 
         items.find({
         "$and": [
-        {"path": "{{ .Values.DemoApp.container.image }}/${runVarImageTag}/manifest.json"},
-        {"repo": "{{ .Values.DemoApp.container.repoPromotion1 }}"}
+        {"path": "{{ .Values.DemoApp.container.image }}/${runVarImageTag}"},
+        {"repo": "{{ .Values.DemoApp.container.repoPromotion1 }}"},
+        {"name": manifest.json}
         ]})
       addedProperties:
         distribution: "automatic"
