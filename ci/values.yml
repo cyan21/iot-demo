@@ -6,22 +6,18 @@ DemoApp:
   projectName: jupiter
   artifactoryIntegration: artifactory_eu
   distributionIntegration: distribution_eu
-  status: green
+  status: purple
   container:
     # for Docker build
     registry: yann-swampup.dev.aws.devopsacc.team/jupiter-docker
     image: turbine
-    tag: 1.0.0
+    tag: 0.0.2
     # for Docker push (which calls the JFrog CLI set props => only accept local repo)
     repoSource: jupiter-docker-dev-local
     repoPromotion1: jupiter-docker-release-local
-
-
-
 ##########################################
 ## CONTAINER PIPELINE
 ##########################################
-
 DemoAppContainerResources:
   gitRepo:
     name: src_dockerfile_demo_app
@@ -29,18 +25,18 @@ DemoAppContainerResources:
     path: cyan21/iot-demo
     branches:
       include: swampup
-    # files:
-#      exclude: ^ci\/.+\.yml 
-      # exclude: ^ci\/pipelines\.yml
+      # files:
+    #      exclude: ^ci\/.+\.yml 
+    # exclude: ^ci\/pipelines\.yml
+
     buildOnCommit: true
   buildInfo:
     resourceName: bi_demo_app_docker
     name: demo_app_docker
   buildInfoPromotion:
     resourceName: bi_demo_app_docker_promoted_staging
-  propertyBag: 
+  propertyBag:
     name: pb_demo_app_docker
-
 DemoAppContainerSteps:
   dockerBuild:
     name: build_demo_app_docker
@@ -55,19 +51,17 @@ DemoAppContainerSteps:
     name: promote_bi_demo_app_docker
     includeDependencies: false
     status: SCAN_OK
-    comment: Xray passed test successfully !!!! 
+    comment: Xray passed test successfully !!!!
     copy: false
-
 ##########################################
 ## DISTRIBUTION PIPELINE
 ##########################################
-
 DemoAppDistributionResources:
   releaseBundle:
     resourceName: rb_demo_app
     name: turbine-demo
     isSigned: true
-    dryRun: 
+    dryRun:
       create: false
       distribute: true
   aql:
@@ -75,12 +69,11 @@ DemoAppDistributionResources:
     edgeRepo: docker-local
   distributionRule:
     name: dr_rb_demo_app
-    serviceName: "*"         
+    serviceName: "*"
     siteName: "*"
     cityName: "*"
     countryCodes:
       - "LA"
-
 DemoAppDistributionSteps:
   initPipeline:
     name: init_distribution
