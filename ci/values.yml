@@ -9,7 +9,7 @@ DemoApp:
   status: green
   container:
     # for Docker build
-    registry: iot-demo.gcp.devopsacc.team:80/jupiter-docker
+    registry: yann-swampup.dev.aws.devopsacc.team/jupiter-docker
     image: turbine-demo
     tag: 0.0.4
     # for Docker push (which calls the JFrog CLI set props => only accept local repo)
