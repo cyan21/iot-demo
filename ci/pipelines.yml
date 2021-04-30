@@ -56,11 +56,6 @@ resources:
     configuration:
       sourceArtifactory: {{ .Values.DemoApp.artifactoryIntegration }}
       query: > 
-        # items.find({
-        # "$and": [
-        # {"@docker.manifest": "${runVarImageTag}"},
-        # {"repo": "{{ .Values.DemoApp.container.repoPromotion1 }}"}
-        # ]})
         items.find({
         "$and": [
         {"path": "{{ .Values.DemoApp.container.image }}/${runVarImageTag}/manifest.json"},
