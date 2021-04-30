@@ -28,7 +28,7 @@ DemoAppContainerResources:
     gitProvider: yann_github
     path: cyan21/iot-demo
     branches:
-      include: main
+      include: swampup
     # files:
 #      exclude: ^ci\/.+\.yml 
       # exclude: ^ci\/pipelines\.yml
