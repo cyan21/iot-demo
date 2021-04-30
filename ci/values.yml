@@ -11,7 +11,7 @@ DemoApp:
     # for Docker build
     registry: yann-swampup.dev.aws.devopsacc.team/jupiter-docker
     image: turbine
-    tag: 0.0.2
+    tag: 0.0.3
     # for Docker push (which calls the JFrog CLI set props => only accept local repo)
     repoSource: jupiter-docker-dev-local
     repoPromotion1: jupiter-docker-release-local
