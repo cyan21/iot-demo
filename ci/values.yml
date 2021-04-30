@@ -6,12 +6,12 @@ DemoApp:
   projectName: jupiter
   artifactoryIntegration: artifactory_eu
   distributionIntegration: distribution_eu
-  status: orange
+  status: red
   container:
     # for Docker build
     registry: yann-swampup.dev.aws.devopsacc.team/jupiter-docker
     image: turbine
-    tag: 0.0.5
+    tag: 0.0.6
     # for Docker push (which calls the JFrog CLI set props => only accept local repo)
     repoSource: jupiter-docker-dev-local
     repoPromotion1: jupiter-docker-release-local
