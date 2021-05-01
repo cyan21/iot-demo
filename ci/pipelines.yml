@@ -102,6 +102,7 @@ pipelines:
             - name: {{ .Values.DemoAppContainerResources.gitRepo.name }}
           integrations:
             - name: {{ .Values.DemoApp.artifactoryIntegration }}
+            - name: art_demo_docker
         execution:
           onStart:
             - cd ${res_{{ .Values.DemoAppContainerResources.gitRepo.name }}_resourcePath}
