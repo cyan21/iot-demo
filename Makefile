@@ -9,7 +9,7 @@ prep:
 	sed  s/STATUS/$(STATUS)/ templates/index.html.tpl > app/index.html
 	sed  s/STATUS/$(STATUS)/ templates/turbine.json.tpl | sed s/IMAGE_VERSION/$(VERSION)/ > app/turbine.json
 	sed  s/REGISTRY/$(REGISTRY)/ templates/Dockerfile.tpl > Dockerfile
-	sed -i s/VERSION/$(BASE_IMAGE_VERSION)/ Dockerfile
+	sed -i "s/VERSION/$(BASE_IMAGE_VERSION)/" Dockerfile
 
 build:
 	sed '' -i s/REGISTRY/$(REGISTRY)/ Dockerfile
