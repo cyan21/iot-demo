@@ -105,8 +105,9 @@ pipelines:
         execution:
           onStart:
             - cd ${res_{{ .Values.DemoAppContainerResources.gitRepo.name }}_resourcePath}
-            - echo ${{{ .Values.DemoApp.container.registry }}/\//\\/}
-            - make prep STATUS={{ .Values.DemoApp.status }} VERSION={{ .Values.DemoApp.container.tag }} REGISTRY=${{{ .Values.DemoApp.container.registry }}/\//\\/} BASE_IMAGE_VERSION={{ .Values.DemoApp.container.baseImageTag }} 
+            - reg={{ .Values.DemoApp.container.registry }}
+            - echo ${reg/\//\\/}            
+            - make prep STATUS={{ .Values.DemoApp.status }} VERSION={{ .Values.DemoApp.container.tag }} REGISTRY=${reg/\//\\/} BASE_IMAGE_VERSION={{ .Values.DemoApp.container.baseImageTag }} 
 
       - name: {{ .Values.DemoAppContainerSteps.dockerPush.name }}
         type: DockerPush
