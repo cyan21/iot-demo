@@ -8,8 +8,8 @@ BASE_IMAGE_VERSION=1.0.0
 prep:
 	sed  s/STATUS/$(STATUS)/ templates/index.html.tpl > app/index.html
 	sed  s/STATUS/$(STATUS)/ templates/turbine.json.tpl | sed s/IMAGE_VERSION/$(VERSION)/ > app/turbine.json
-	sed s/REGISTRY/$(REGISTRY)/ Dockerfile.tpl > ../Dockerfile
-	sed -i s/VERSION/$(BASE_IMAGE_VERSION)/ ../Dockerfile
+	sed  s/REGISTRY/$(REGISTRY)/ template/Dockerfile.tpl > Dockerfile
+	sed -i s/VERSION/$(BASE_IMAGE_VERSION)/ Dockerfile
 
 build:
 	sed '' -i s/REGISTRY/$(REGISTRY)/ Dockerfile
