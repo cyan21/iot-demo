@@ -11,7 +11,7 @@ prep:
 	# if repo path, needs to escape /	
 	tmp=$(REGISTRY)
 	reg=${tmp/\//\\/}
-	echo $reg
+	echo $(reg)
 	sed  "s/REGISTRY/$reg/ templates/Dockerfile.tpl" > Dockerfile
 	sed -i s/VERSION/$(BASE_IMAGE_VERSION)/ Dockerfile
 
