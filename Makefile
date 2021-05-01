@@ -8,9 +8,10 @@ BASE_IMAGE_VERSION=1.0.0
 prep:
 	sed  s/STATUS/$(STATUS)/ templates/index.html.tpl > app/index.html
 	sed  s/STATUS/$(STATUS)/ templates/turbine.json.tpl | sed s/IMAGE_VERSION/$(VERSION)/ > app/turbine.json
-	reg=$(REGISTRY)
-	# if repo path, needs to escape /
-	sed  "s/REGISTRY/${reg/\//\\/}/ templates/Dockerfile.tpl" > Dockerfile
+	# if repo path, needs to escape /	
+	reg=${$(REGISTRY)/\//\\/}
+	echo $(reg)
+	sed  "s/REGISTRY/$(reg)/ templates/Dockerfile.tpl" > Dockerfile
 	sed -i s/VERSION/$(BASE_IMAGE_VERSION)/ Dockerfile
 
 build:
