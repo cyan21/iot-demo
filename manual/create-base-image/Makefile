@@ -10,7 +10,7 @@ init:
 	docker push $(REGISTRY)/$(IMAGE):$(VERSION)
 
 fix:
-	docker build --squash -t $(REGISTRY)/$(IMAGE):$(NEW_VERSION) -f Dockerfile-fix .
+	docker build --squash -t $(REGISTRY)/$(IMAGE):$(NEW_VERSION) -f Dockerfile-with-fix .
 	docker login $(REGISTRY)
 	docker push $(REGISTRY)/$(IMAGE):$(NEW_VERSION)
 

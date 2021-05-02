@@ -56,7 +56,9 @@ make fix
 
 Update values.yml and push to git repo => this will fire JFrog pipelines
  ```
-make bump STATUS="green" VERSION="1.1.0" 
+ # cd to root folder of the git repo and run 
+cd ../../
+make bump STATUS="green" VERSION="1.0.1" BASE_IMAGE_VERSION="1.0.1"
  ```
 
 ### Manually
