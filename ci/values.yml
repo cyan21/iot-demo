@@ -9,7 +9,7 @@ DemoApp:
   status: red
   container:
     # for Docker build
-    registry: yann-swampup.dev.aws.devopsacc.team/demo-docker
+    registry: iot-demo.gcp.devopsacc.team:80/demo-docker
     image: turbine-safety
     tag: 1.0.0
     baseImageTag: 1.0.0
