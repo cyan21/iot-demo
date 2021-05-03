@@ -10,7 +10,7 @@ DemoApp:
   container:
     # for Docker build
     registry: yann-swampup.dev.aws.devopsacc.team/demo-docker
-    image: turbine
+    image: turbine-safety
     tag: 2.0.2
     baseImageTag: 1.0.1
     # for Docker push (which calls the JFrog CLI set props => only accept local repo)
@@ -74,7 +74,7 @@ DemoAppDistributionResources:
     siteName: "*"
     cityName: "*"
     countryCodes:
-      - "LA"
+      - "DE"
 DemoAppDistributionSteps:
   initPipeline:
     name: init_distribution

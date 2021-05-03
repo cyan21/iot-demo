@@ -1,7 +1,7 @@
 
-REGISTRY=yann-swampup.dev.aws.devopsacc.team
+REGISTRY=iot-demo.gcp.devopsacc.team:80
 REPO=demo-docker-release-local
-IMAGE=turbine
+IMAGE=turbine-safety
 STATUS=red
 VERSION=1.0.0
 BASE_IMAGE_VERSION=1.0.0

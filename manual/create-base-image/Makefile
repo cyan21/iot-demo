@@ -1,5 +1,5 @@
 
-REGISTRY=yann-swampup.dev.aws.devopsacc.team/demo-docker-release-local
+REGISTRY=iot-demo.gcp.devopsacc.team:80/demo-docker-release-local
 IMAGE=nginx-myorg
 VERSION=1.0.0
 NEW_VERSION=1.0.1
