@@ -6,13 +6,14 @@ DemoApp:
   projectName: jupiter
   artifactoryIntegration: artifactory_eu
   distributionIntegration: distribution_eu
-  status: green
+  status: red
   container:
     # for Docker build
-    registry: iot-demo.gcp.devopsacc.team:80/demo-docker
+    # registry: iot-demo.gcp.devopsacc.team:80/demo-docker
+    registry: iotdemocloud.jfrogdev.org/demo-docker
     image: turbine-safety
-    tag: 1.0.1
-    baseImageTag: 1.0.1
+    tag: 1.0.0
+    baseImageTag: 1.0.0
     # for Docker push (which calls the JFrog CLI set props => only accept local repo)
     repoSource: demo-docker-dev-local
     repoPromotion1: demo-docker-release-local

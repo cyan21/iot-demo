@@ -188,14 +188,12 @@ pipelines:
           releaseBundleVersion: ${runVarImageTag} 
           sign: true
           dryRun: {{ .Values.DemoAppDistributionResources.releaseBundle.dryRun.create }}
-          description: automatic creation 
+          description: Turbine safety app version ${runVarImageTag}
           releaseNotes:
             syntax: markdown
             content: |
               # Description 
-              super release 
-              * Feature 1 
-              * Bigfix 1
+              Fixing vulnerabilities found in previous versions 
           inputResources:
             - name: {{ .Values.DemoAppDistributionResources.aql.name }}
           outputResources:

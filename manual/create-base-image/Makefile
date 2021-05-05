@@ -1,5 +1,5 @@
 
-REGISTRY=iot-demo.gcp.devopsacc.team:80/demo-docker-release-local
+REGISTRY=iotdemocloud.jfrogdev.org/demo-docker-release-local
 IMAGE=nginx-myorg
 VERSION=1.0.0
 NEW_VERSION=1.0.1
