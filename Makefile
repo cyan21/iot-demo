@@ -1,5 +1,5 @@
 
-REGISTRY=iot-demo.gcp.devopsacc.team:80
+REGISTRY=iotdemocloud.jfrogdev.org
 REPO=demo-docker-release-local
 IMAGE=turbine-safety
 STATUS=red
