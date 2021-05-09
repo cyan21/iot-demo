@@ -12,7 +12,7 @@ DemoApp:
     # registry: iot-demo.gcp.devopsacc.team:80/demo-docker
     registry: iotdemocloud.jfrogdev.org/demo-docker
     image: turbine-safety
-    tag: 2.0.3
+    tag: 2.0.0
     baseImageTag: 1.0.1
     # for Docker push (which calls the JFrog CLI set props => only accept local repo)
     repoSource: demo-docker-dev-local
